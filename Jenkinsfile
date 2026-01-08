@@ -2,20 +2,13 @@ pipeline {
     agent any
 
     environment {
-        GITHUB_TOKEN = credentials('github-token')     // GitHub token credential ID
-        SONARQUBE_AUTH = credentials('sonarqube-admin') // SonarQube admin credential ID
+        GITHUB_TOKEN = credentials('github-token')
+        SONARQUBE_AUTH = credentials('sonarqube-admin')
         IMAGE_NAME = "ghcr.io/bavindushan/spring-petclinic:latest"
+        SONAR_HOST_URL = "http://192.168.48.132:9000"
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git(
-                    url: 'https://github.com/bavindushan/spring-petclinic-devsecops.git',
-                    credentialsId: 'github-token'
-                )
-            }
-        }
 
         stage('Build') {
             steps {
@@ -35,9 +28,6 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            environment {
-                SONAR_HOST_URL = 'http://192.168.48.132:9000'
-            }
             steps {
                 sh """
                 ./mvnw sonar:sonar \
@@ -60,9 +50,7 @@ pipeline {
 
         stage('Security Scan (Trivy)') {
             steps {
-                sh """
-                trivy image --exit-code 1 $IMAGE_NAME
-                """
+                sh 'trivy image --exit-code 1 $IMAGE_NAME'
             }
         }
     }
