@@ -3,9 +3,7 @@ pipeline {
 
     environment {
         GITHUB_TOKEN = credentials('github-token')
-        // SONARQUBE_AUTH = credentials('sonarqube-admin')
         IMAGE_NAME = "ghcr.io/bavindushan/spring-petclinic:latest"
-        // SONAR_HOST_URL = "http://192.168.48.132:9000"
     }
 
     stages {
@@ -26,22 +24,6 @@ pipeline {
                 }
             }
         }
-
-        // =========================
-        // SonarQube (Disabled for now)
-        // =========================
-        /*
-        stage('SonarQube Analysis') {
-            steps {
-                sh """
-                ./mvnw sonar:sonar \
-                  -Dsonar.projectKey=spring-petclinic \
-                  -Dsonar.host.url=$SONAR_HOST_URL \
-                  -Dsonar.login=$SONARQUBE_AUTH
-                """
-            }
-        }
-        */
 
         stage('Docker Build & Push') {
             steps {
