@@ -27,11 +27,11 @@ pipeline {
 
         stage('Docker Build & Push') {
             steps {
-                sh """
-                docker build -t $IMAGE_NAME .
-                echo $GITHUB_TOKEN | docker login ghcr.io -u bavindushan --password-stdin
-                docker push $IMAGE_NAME
-                """
+                sh '''
+                    docker build -t $IMAGE_NAME .
+                    echo $GITHUB_TOKEN | docker login ghcr.io -u bavindushan --password-stdin
+                    docker push $IMAGE_NAME
+                '''
             }
         }
 
